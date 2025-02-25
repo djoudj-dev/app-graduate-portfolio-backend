@@ -1,5 +1,4 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { AboutSoftSkill } from './about-soft-skill.entity';
 import { User } from './user.entity';
 
 @Entity('about')
@@ -25,11 +24,17 @@ export class About {
   @Column({ name: 'soft_skills_title', nullable: false })
   softSkillsTitle: string;
 
+  @Column('simple-array', { nullable: true })
+  soft_skills: string[];
+
   @Column({ name: 'cv_link', nullable: false })
   cvLink: string;
 
   @Column({ name: 'github_link', nullable: false })
   githubLink: string;
+
+  @Column({ name: 'linkedin_link', nullable: false })
+  linkedinLink: string;
 
   @Column({ name: 'profile_image', nullable: false })
   profileImage: string;
@@ -42,7 +47,4 @@ export class About {
 
   @OneToMany(() => User, (user) => user.about)
   users: User[];
-
-  @OneToMany(() => AboutSoftSkill, (aboutSoftSkill) => aboutSoftSkill.about)
-  aboutSoftSkills: AboutSoftSkill[];
 }
