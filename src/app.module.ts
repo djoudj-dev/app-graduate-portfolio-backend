@@ -4,6 +4,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { PostgresModule } from './database/postgres/postgres.module';
+import { AboutModule } from './modules/about/about.module';
 import { ProjectModule } from './modules/projects/projects.module';
 
 @Module({
@@ -15,6 +16,7 @@ import { ProjectModule } from './modules/projects/projects.module';
     PostgresModule,
     AuthModule,
     ProjectModule,
+    AboutModule,
   ],
   controllers: [AppController],
   providers: [AppService],
