@@ -8,31 +8,25 @@ async function bootstrap() {
   // Validation globale
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
-  // CORS
+  // Configuration dynamique des CORS
   app.enableCors({
-    origin: [
-      'https://api-app-graduate-back.nedellec-julien.fr',
-      'https://app-graduate-back.nedellec-julien.fr', // Frontend Angular
-      'http://localhost:4200', // Dev Frontend
-    ],
+    origin: (
+      origin: string | undefined,
+      callback: (err: Error | null, origin?: string) => void,
+    ) => {
+      const allowedOrigins = [
+        'https://app-graduate-front.nedellec-julien.fr', // Frontend en prod
+        'http://localhost:4200', // Dev Frontend
+      ];
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, origin); // Autoriser l'origine demandée
+      } else {
+        callback(new Error('CORS non autorisé'));
+      }
+    },
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
-    allowedHeaders: [
-      'Content-Type',
-      'Authorization',
-      'x-request-id',
-      'Partitioned-Cookie',
-      'Storage-Access-Policy',
-      'Origin',
-      'Accept',
-      'Access-Control-Allow-Origin',
-      'Access-Control-Allow-Methods',
-      'Access-Control-Allow-Headers',
-    ],
-    exposedHeaders: [
-      'Access-Control-Allow-Origin',
-      'Access-Control-Allow-Credentials',
-    ],
+    allowedHeaders: ['Content-Type', 'Authorization'],
   });
 
   // Préfixe API
@@ -40,6 +34,10 @@ async function bootstrap() {
 
   const port = process.env.PORT || 3000;
   await app.listen(port);
-  console.log(`Application démarrée sur le port ${port}`);
+  console.log(`✅ Application NestJS démarrée sur http://localhost:${port}`);
 }
-bootstrap();
+
+// Gestion des erreurs au démarrage
+bootstrap().catch((err) => {
+  console.error("❌ Erreur lors du démarrage de l'application NestJS :", err);
+});
