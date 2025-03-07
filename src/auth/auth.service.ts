@@ -1,8 +1,14 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Role } from 'src/database/postgres/entity/role.entity';
 import { User } from 'src/database/postgres/entity/user.entity';
 import { Repository } from 'typeorm';
+import { CreateUserDto } from './dto/create-user.dto';
 import { LoginDto } from './dto/login.dto';
 
 @Injectable()
@@ -47,12 +53,22 @@ export class AuthService {
     };
   }
 
-  async createUser(loginDto: LoginDto): Promise<User> {
-    const { email, password } = loginDto;
+  async createUser(createUserDto: CreateUserDto): Promise<User> {
+    const { email, password, role: roleName } = createUserDto;
+
+    // Rechercher le rôle par nom
+    const role = await this.userRepository.manager.findOne(Role, {
+      where: { name: roleName },
+    });
+
+    if (!role) {
+      throw new BadRequestException(`Rôle "${roleName}" non trouvé`);
+    }
 
     const user = this.userRepository.create({
       email,
       password,
+      roleId: role.id, // Assigner roleId au lieu de l'entité role
     });
 
     await this.userRepository.save(user);
