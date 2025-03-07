@@ -38,4 +38,12 @@ export class AboutService {
     const updatedAbout = this.aboutRepository.merge(existingAbout, about);
     return await this.aboutRepository.save(updatedAbout);
   }
+
+  /**
+   * Crée une nouvelle information about
+   */
+  async create(about: About): Promise<About> {
+    const newAbout = this.aboutRepository.create(about);
+    return this.aboutRepository.save(newAbout);
+  }
 }
