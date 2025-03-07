@@ -13,8 +13,11 @@ RUN npm install --production
 # Copier le reste des fichiers de l'application
 COPY . .
 
+# Construire l'application
+RUN npm run build
+
 # Exposer le port sur lequel l'application écoute
 EXPOSE 3000
 
 # Commande pour démarrer l'application
-CMD ["node", "index.js"]
+CMD ["node", "dist/main.js"]
