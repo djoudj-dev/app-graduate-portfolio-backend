@@ -1,0 +1,31 @@
+# Ignorer les fichiers de dépendances
+node_modules
+npm-debug.log
+yarn-error.log
+
+# Ignorer les fichiers de build
+dist
+build
+
+# Ignorer les fichiers de configuration de l'IDE
+.vscode
+.idea
+*.sublime-workspace
+
+# Ignorer les fichiers de logs
+logs
+*.log
+
+# Ignorer les fichiers d'environnement
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Ignorer les fichiers temporaires
+.temp
+.tmp
+
+# Ignorer les fichiers de couverture de tests
+coverage
