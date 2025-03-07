@@ -11,7 +11,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [22.14]
+        node-version: [18.20]
 
     steps:
       # Étape 1 : Checkout du code source
