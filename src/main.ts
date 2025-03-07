@@ -11,9 +11,9 @@ async function bootstrap() {
   // CORS
   app.enableCors({
     origin: [
-      'https://app-graduate-back.nedellec-julien.fr',
-      'http://localhost:4200',
-      'http://localhost:3000',
+      'https://api-app-graduate-back.nedellec-julien.fr',
+      'https://app-graduate-back.nedellec-julien.fr', // Frontend Angular
+      'http://localhost:4200', // Dev Frontend
     ],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
