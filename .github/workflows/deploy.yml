@@ -1,9 +1,9 @@
-name: Deploy NestJS App to Docker
+name: Deployement du back-end
 
 on:
   push:
     branches:
-      - main
+      - master
 
 jobs:
   deploy:
