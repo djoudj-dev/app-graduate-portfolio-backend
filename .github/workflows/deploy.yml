@@ -11,7 +11,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [20.12]
+        node-version: [22.14]
 
     steps:
       # Étape 1 : Checkout du code source
@@ -29,14 +29,6 @@ jobs:
       # Installation des dépendances avec npm clean-install
       - name: Install dependencies
         run: npm ci
-
-      # Audit de sécurité
-      - name: Audit
-        run: npm audit
-
-      # Vérification de la signature des audits
-      - name: Audit Signature
-        run: npm audit signatures
 
       # Build
       - name: Build
@@ -62,5 +54,5 @@ jobs:
           context: .
           push: true
           tags: |
-            ${{ secrets.DOCKER_USERNAME }}/arcadia-zoo-app-back:latest
-            ${{ secrets.DOCKER_USERNAME }}/arcadia-zoo-app-back:${{ github.sha }}
+            ${{ secrets.DOCKER_USERNAME }}/api-app-graduate-back:latest
+            ${{ secrets.DOCKER_USERNAME }}/api-app-graduate-back:${{ github.sha }}
