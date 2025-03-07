@@ -46,4 +46,16 @@ export class AuthService {
       },
     };
   }
+
+  async createUser(loginDto: LoginDto): Promise<User> {
+    const { email, password } = loginDto;
+
+    const user = this.userRepository.create({
+      email,
+      password,
+    });
+
+    await this.userRepository.save(user);
+    return user;
+  }
 }
