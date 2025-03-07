@@ -1,5 +1,6 @@
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
+import console from 'console';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
@@ -17,6 +18,22 @@ async function bootstrap() {
     ],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
+    allowedHeaders: [
+      'Content-Type',
+      'Authorization',
+      'x-request-id',
+      'Partitioned-Cookie',
+      'Storage-Access-Policy',
+      'Origin',
+      'Accept',
+      'Access-Control-Allow-Origin',
+      'Access-Control-Allow-Methods',
+      'Access-Control-Allow-Headers',
+    ],
+    exposedHeaders: [
+      'Access-Control-Allow-Origin',
+      'Access-Control-Allow-Credentials',
+    ],
   });
 
   // Préfixe API
