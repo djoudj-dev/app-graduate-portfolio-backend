@@ -32,6 +32,7 @@ export class StatsController {
   async createStats(
     @Body(ValidationPipe) createVisitStatDto: CreateVisitStatDto,
   ): Promise<VisitStat> {
+    console.log('Données reçues côté backend:', createVisitStatDto); // DEBUG
     return this.statsService.create(createVisitStatDto);
   }
 }
