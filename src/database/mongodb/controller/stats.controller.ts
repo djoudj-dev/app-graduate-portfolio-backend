@@ -11,7 +11,7 @@ import { CreateVisitStatDto, GetStatsQueryDto } from '../dto/stats.dto';
 import { VisitStat } from '../entity/stats.entity';
 import { StatsService } from '../service/stats.service';
 
-@Controller('api/stats')
+@Controller('stats')
 export class StatsController {
   constructor(private readonly statsService: StatsService) {}
 
