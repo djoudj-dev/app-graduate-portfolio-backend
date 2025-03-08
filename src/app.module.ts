@@ -4,11 +4,11 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
+import { CountersModule } from './database/mongodb/module/counters.module';
 import { StatsModule } from './database/mongodb/module/stats.module';
 import { PostgresModule } from './database/postgres/postgres.module';
 import { AboutModule } from './modules/about/about.module';
 import { ProjectModule } from './modules/projects/projects.module';
-
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -28,6 +28,7 @@ import { ProjectModule } from './modules/projects/projects.module';
     ProjectModule,
     AboutModule,
     StatsModule,
+    CountersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
