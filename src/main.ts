@@ -34,7 +34,6 @@ async function bootstrap() {
 
   const port = process.env.PORT || 3000;
   await app.listen(port);
-  console.log(`✅ Application NestJS démarrée sur http://localhost:${port}`);
 }
 
 // Gestion des erreurs au démarrage
