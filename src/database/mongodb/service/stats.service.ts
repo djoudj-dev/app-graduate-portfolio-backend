@@ -25,53 +25,51 @@ export class StatsService {
     const stats = await this.visitStatModel
       .findOne(query)
       .sort({ date: -1 })
-      .lean() // Convertit en objet JS brut (évite l'erreur de type)
+      .lean()
       .exec();
 
     if (!stats) {
       throw new NotFoundException('Statistiques non trouvées');
     }
 
-    return stats as VisitStat; // Assure TypeScript que le retour est bien du type attendu
+    return stats as VisitStat;
   }
 
   async create(createVisitStatDto: CreateVisitStatDto): Promise<VisitStat> {
     const statsData = { ...createVisitStatDto };
 
     if (statsData.data?.values?.length) {
-      statsData.total ??= statsData.data.values.reduce(
+      statsData.total = statsData.data.values.reduce(
         (acc, curr) => acc + curr,
         0,
       );
-      statsData.average ??= statsData.total / statsData.data.values.length;
+      statsData.average = statsData.total / statsData.data.values.length;
 
-      if (!statsData.peak) {
-        const peakValue = Math.max(...statsData.data.values);
-        const peakIndex = statsData.data.values.indexOf(peakValue);
-        statsData.peak = {
-          value: peakValue,
-          date: new Date(
-            new Date().setDate(
-              new Date().getDate() -
-                (statsData.data.values.length - 1 - peakIndex),
-            ),
+      // Calcul du pic
+      const peakValue = Math.max(...statsData.data.values);
+      const peakIndex = statsData.data.values.indexOf(peakValue);
+      statsData.peak = {
+        value: peakValue,
+        date: new Date(
+          new Date().setDate(
+            new Date().getDate() -
+              (statsData.data.values.length - 1 - peakIndex),
           ),
-        };
-      }
+        ),
+      };
 
-      if (!statsData.lowest) {
-        const lowestValue = Math.min(...statsData.data.values);
-        const lowestIndex = statsData.data.values.indexOf(lowestValue);
-        statsData.lowest = {
-          value: lowestValue,
-          date: new Date(
-            new Date().setDate(
-              new Date().getDate() -
-                (statsData.data.values.length - 1 - lowestIndex),
-            ),
+      // Calcul du plus bas
+      const lowestValue = Math.min(...statsData.data.values);
+      const lowestIndex = statsData.data.values.indexOf(lowestValue);
+      statsData.lowest = {
+        value: lowestValue,
+        date: new Date(
+          new Date().setDate(
+            new Date().getDate() -
+              (statsData.data.values.length - 1 - lowestIndex),
           ),
-        };
-      }
+        ),
+      };
     }
 
     try {

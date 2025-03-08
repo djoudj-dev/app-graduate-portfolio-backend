@@ -21,6 +21,7 @@ import { ProjectModule } from './modules/projects/projects.module';
         uri:
           configService.get<string>('MONGO_URL') ||
           'mongodb://localhost:27017/stats-app',
+        connectTimeoutMS: 60000, // Augmenter le délai d'attente à 60 secondes
       }),
       inject: [ConfigService],
     }),
