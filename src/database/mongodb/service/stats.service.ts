@@ -72,8 +72,15 @@ export class StatsService {
       };
     }
 
+    // Vérification de la cohérence des clicks
+    if (statsData.data?.clicks?.length !== statsData.data?.values?.length) {
+      throw new InternalServerErrorException(
+        'Le tableau des clics doit avoir la même longueur que le tableau des valeurs.',
+      );
+    }
+
     try {
-      return (await new this.visitStatModel(statsData).save()) as VisitStat;
+      return await new this.visitStatModel(statsData).save();
     } catch (error: unknown) {
       if (error instanceof Error) {
         throw new InternalServerErrorException(error.message);

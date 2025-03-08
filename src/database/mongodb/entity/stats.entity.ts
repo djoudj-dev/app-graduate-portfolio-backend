@@ -1,4 +1,3 @@
-// stats.entity.ts
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
@@ -8,6 +7,9 @@ class DataPoint {
 
   @Prop({ type: [Number] })
   values: number[];
+
+  @Prop({ type: [Number] })
+  clicks: number[];
 }
 
 class PeakData {

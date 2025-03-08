@@ -16,6 +16,11 @@ class DataPointDto {
   @IsArray()
   @IsNotEmpty()
   values: number[];
+
+  @IsArray()
+  @IsNotEmpty()
+  @IsNumber({}, { each: true })
+  clicks: number[];
 }
 
 class PeakDataDto {
