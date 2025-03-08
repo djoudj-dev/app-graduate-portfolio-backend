@@ -14,7 +14,6 @@ export const connectMongoDB = async () => {
     }
 
     console.log('Tentative de connexion à MongoDB...');
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
     await mongoose.connect(mongoUri, {
       connectTimeoutMS: 30000,
       retryWrites: true,

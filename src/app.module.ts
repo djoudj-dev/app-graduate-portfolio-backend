@@ -18,9 +18,7 @@ import { ProjectModule } from './modules/projects/projects.module';
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
-        uri:
-          configService.get<string>('MONGO_URL') ||
-          'mongodb://localhost:27017/stats-app',
+        uri: configService.get<string>('MONGO_URL'),
         connectTimeoutMS: 60000, // Augmenter le délai d'attente à 60 secondes
       }),
       inject: [ConfigService],
