@@ -1,14 +1,5 @@
-import {
-  Body,
-  Controller,
-  Get,
-  NotFoundException,
-  Post,
-  Query,
-  ValidationPipe,
-} from '@nestjs/common';
-import { CreateVisitStatDto, GetStatsQueryDto } from '../dto/stats.dto';
-import { VisitStat } from '../entity/stats.entity';
+import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Stats } from '../schemas/stats.schema';
 import { StatsService } from '../service/stats.service';
 
 @Controller('stats')
@@ -16,23 +7,17 @@ export class StatsController {
   constructor(private readonly statsService: StatsService) {}
 
   @Get()
-  async getStats(
-    @Query(new ValidationPipe({ transform: true })) query: GetStatsQueryDto,
-  ): Promise<VisitStat> {
-    const stats = await this.statsService.getStats(query);
-
-    if (!stats) {
-      throw new NotFoundException('Aucune statistique trouvée');
-    }
-
-    return stats;
+  async getStats(): Promise<Stats | null> {
+    return this.statsService.getStats();
   }
 
   @Post()
-  async createStats(
-    @Body(ValidationPipe) createVisitStatDto: CreateVisitStatDto,
-  ): Promise<VisitStat> {
-    console.log('Données reçues côté backend:', createVisitStatDto); // DEBUG
-    return this.statsService.create(createVisitStatDto);
+  async updateStats(@Body() data: Partial<Stats>): Promise<Stats | null> {
+    return this.statsService.updateStats(data);
+  }
+
+  @Post('increment')
+  async incrementVisits(): Promise<Stats | null> {
+    return this.statsService.incrementVisits();
   }
 }
