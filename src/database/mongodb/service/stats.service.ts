@@ -1,93 +1,26 @@
-import {
-  Injectable,
-  InternalServerErrorException,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { CreateVisitStatDto, GetStatsQueryDto } from '../dto/stats.dto';
-import { VisitStat } from '../entity/stats.entity';
+import { Stats } from '../schemas/stats.schema';
 
 @Injectable()
 export class StatsService {
-  constructor(
-    @InjectModel(VisitStat.name)
-    private readonly visitStatModel: Model<VisitStat>,
-  ) {}
+  constructor(@InjectModel(Stats.name) private statsModel: Model<Stats>) {}
 
-  async getStats(queryParams: GetStatsQueryDto): Promise<VisitStat> {
-    const { period, startDate } = queryParams;
-    const query: Record<string, unknown> = {};
-
-    if (period) query.period = period;
-    if (startDate) query.date = { $gte: new Date(startDate) };
-
-    const stats = await this.visitStatModel
-      .findOne(query)
-      .sort({ date: -1 })
-      .lean()
-      .exec();
-
-    if (!stats) {
-      throw new NotFoundException('Statistiques non trouvées');
-    }
-
-    return stats as VisitStat;
+  async getStats(): Promise<Stats | null> {
+    return this.statsModel.findOne().exec();
   }
 
-  async create(createVisitStatDto: CreateVisitStatDto): Promise<VisitStat> {
-    const statsData = { ...createVisitStatDto };
+  async updateStats(data: Partial<Stats>): Promise<Stats | null> {
+    return this.statsModel.findOneAndUpdate({}, data, { new: true }).exec();
+  }
 
-    if (statsData.data?.values?.length) {
-      statsData.total = statsData.data.values.reduce(
-        (acc, curr) => acc + curr,
-        0,
-      );
-      statsData.average = statsData.total / statsData.data.values.length;
-
-      // Calcul du pic
-      const peakValue = Math.max(...statsData.data.values);
-      const peakIndex = statsData.data.values.indexOf(peakValue);
-      statsData.peak = {
-        value: peakValue,
-        date: new Date(
-          new Date().setDate(
-            new Date().getDate() -
-              (statsData.data.values.length - 1 - peakIndex),
-          ),
-        ),
-      };
-
-      // Calcul du plus bas
-      const lowestValue = Math.min(...statsData.data.values);
-      const lowestIndex = statsData.data.values.indexOf(lowestValue);
-      statsData.lowest = {
-        value: lowestValue,
-        date: new Date(
-          new Date().setDate(
-            new Date().getDate() -
-              (statsData.data.values.length - 1 - lowestIndex),
-          ),
-        ),
-      };
-    }
-
-    // Vérification de la cohérence des clicks
-    if (statsData.data?.clicks?.length !== statsData.data?.values?.length) {
-      throw new InternalServerErrorException(
-        'Le tableau des clics doit avoir la même longueur que le tableau des valeurs.',
-      );
-    }
-
-    try {
-      return await new this.visitStatModel(statsData).save();
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        throw new InternalServerErrorException(error.message);
-      }
-      throw new InternalServerErrorException(
-        "Une erreur inconnue est survenue lors de l'enregistrement des statistiques.",
-      );
-    }
+  async incrementVisits(): Promise<Stats | null> {
+    const stats = await this.getStats();
+    const updatedStats = {
+      totalVisits: (stats?.totalVisits || 0) + 1,
+      // Vous pouvez également gérer les visiteurs uniques et les pages vues ici
+    };
+    return this.updateStats(updatedStats);
   }
 }
