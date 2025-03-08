@@ -1,8 +1,10 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { MongooseModule } from '@nestjs/mongoose';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
+import { StatsModule } from './database/mongodb/module/stats.module';
 import { PostgresModule } from './database/postgres/postgres.module';
 import { AboutModule } from './modules/about/about.module';
 import { ProjectModule } from './modules/projects/projects.module';
@@ -13,10 +15,20 @@ import { ProjectModule } from './modules/projects/projects.module';
       envFilePath: `${process.env.NODE_ENV || 'development'}.env`,
       isGlobal: true,
     }),
+    MongooseModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => ({
+        uri:
+          configService.get<string>('MONGO_URL') ||
+          'mongodb://localhost:27017/stats-app',
+      }),
+      inject: [ConfigService],
+    }),
     PostgresModule,
     AuthModule,
     ProjectModule,
     AboutModule,
+    StatsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
