@@ -22,7 +22,8 @@ export class StatsController {
   }
 
   @Get('real-time-visits')
-  async getRealTimeVisits(): Promise<Stats | null> {
-    return this.statsService.getStats();
+  async getRealTimeVisits(): Promise<number> {
+    // 🛠️ Type corrigé
+    return this.statsService.getRealTimeVisits();
   }
 }
