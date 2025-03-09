@@ -21,7 +21,7 @@ export class StatsController {
     return this.statsService.incrementVisits();
   }
 
-  @Post('real-time-visits')
+  @Get('real-time-visits')
   async getRealTimeVisits(): Promise<Stats | null> {
     return this.statsService.getStats();
   }
