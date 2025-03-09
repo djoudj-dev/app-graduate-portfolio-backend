@@ -14,6 +14,7 @@ export class StatsService {
   }
 
   async updateStats(data: Partial<Stats>): Promise<Stats | null> {
+    console.log('Updating stats with data:', data);
     return this.statsModel
       .findOneAndUpdate({}, data, { new: true, upsert: true })
       .exec();
@@ -39,9 +40,9 @@ export class StatsService {
   }
 
   async getRealTimeVisits(): Promise<number> {
-    // 🛠️ Correction du type
     const stats = await this.getStats();
-    return stats?.totalVisits ?? 0; // 🛠️ Retourne un nombre au lieu d'un objet
+    console.log('Stats retrieved for real-time visits:', stats);
+    return stats?.totalVisits ?? 0;
   }
 
   async initializeStats(): Promise<Stats> {

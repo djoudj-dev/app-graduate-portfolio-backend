@@ -18,6 +18,7 @@ export class StatsController {
 
   @Post('increment')
   async incrementVisits(): Promise<Stats | null> {
+    console.log('Incrementing visits...');
     return this.statsService.incrementVisits();
   }
 
