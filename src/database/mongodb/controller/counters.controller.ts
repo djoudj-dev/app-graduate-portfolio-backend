@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { Counters } from '../schemas/counters.schema';
 import { CountersService } from '../service/counters.service';
 
@@ -14,5 +14,12 @@ export class CountersController {
   @Post()
   async updateCounters(@Body() data: Counters): Promise<Counters | null> {
     return this.countersService.updateCounters(data);
+  }
+
+  @Post('increment/:key')
+  async incrementCounter(
+    @Param('key') key: keyof Counters,
+  ): Promise<Counters | null> {
+    return this.countersService.incrementCounter(key);
   }
 }

@@ -17,4 +17,20 @@ export class CountersService {
   async updateCounters(data: Counters): Promise<Counters | null> {
     return this.countersModel.findOneAndUpdate({}, data, { new: true }).exec();
   }
+
+  async incrementCounter(key: keyof Counters): Promise<Counters | null> {
+    console.log(`Incrementing counter: ${key}`); // Log for debugging
+    const counters = await this.getCounters();
+
+    if (!counters) {
+      throw new Error('Counters not found'); // Handle the case where counters is null
+    }
+
+    const updatedCounters: Counters = {
+      ...counters.toObject(),
+      [key]: (counters[key] || 0) + 1,
+    };
+
+    return this.updateCounters(updatedCounters);
+  }
 }
