@@ -8,7 +8,7 @@ export class StatsService {
   constructor(@InjectModel(Stats.name) private statsModel: Model<Stats>) {}
 
   async getStats(): Promise<Stats | null> {
-    return this.initializeStats();
+    return this.statsModel.findOne().exec();
   }
 
   async updateStats(data: Partial<Stats>): Promise<Stats | null> {
