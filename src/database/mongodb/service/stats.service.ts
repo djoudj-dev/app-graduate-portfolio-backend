@@ -14,18 +14,33 @@ export class StatsService {
   }
 
   async updateStats(data: Partial<Stats>): Promise<Stats | null> {
-    return this.statsModel.findOneAndUpdate({}, data, { new: true }).exec();
+    return this.statsModel
+      .findOneAndUpdate({}, data, { new: true, upsert: true })
+      .exec();
   }
 
   async incrementVisits(): Promise<Stats | null> {
-    const stats = await this.getStats();
-    console.log('Current stats before increment:', stats);
+    let stats = await this.getStats();
+
+    if (!stats) {
+      stats = await this.initializeStats();
+    }
+
     const updatedStats = {
-      totalVisits: (stats?.totalVisits || 0) + 1,
-      // Vous pouvez également gérer les visiteurs uniques et les pages vues ici
+      totalVisits: stats.totalVisits + 1,
+      uniqueVisitors: stats.uniqueVisitors, // 🛠️ Peut être géré différemment si besoin
+      pageViews: stats.pageViews + 1,
+      lastUpdated: new Date(),
     };
+
     console.log('Updated stats:', updatedStats);
     return this.updateStats(updatedStats);
+  }
+
+  async getRealTimeVisits(): Promise<number> {
+    // 🛠️ Correction du type
+    const stats = await this.getStats();
+    return stats?.totalVisits ?? 0; // 🛠️ Retourne un nombre au lieu d'un objet
   }
 
   async initializeStats(): Promise<Stats> {
