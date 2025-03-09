@@ -8,7 +8,7 @@ export class StatsService {
   constructor(@InjectModel(Stats.name) private statsModel: Model<Stats>) {}
 
   async getStats(): Promise<Stats | null> {
-    return this.statsModel.findOne().exec();
+    return this.initializeStats();
   }
 
   async updateStats(data: Partial<Stats>): Promise<Stats | null> {
@@ -22,5 +22,19 @@ export class StatsService {
       // Vous pouvez également gérer les visiteurs uniques et les pages vues ici
     };
     return this.updateStats(updatedStats);
+  }
+
+  async initializeStats(): Promise<Stats> {
+    const existingStats = await this.getStats();
+    if (!existingStats) {
+      const newStats = new this.statsModel({
+        totalVisits: 0,
+        uniqueVisitors: 0,
+        pageViews: 0,
+        lastUpdated: new Date(),
+      });
+      return newStats.save();
+    }
+    return existingStats;
   }
 }
