@@ -20,4 +20,9 @@ export class StatsController {
   async incrementVisits(): Promise<Stats | null> {
     return this.statsService.incrementVisits();
   }
+
+  @Post('real-time-visits')
+  async getRealTimeVisits(): Promise<Stats | null> {
+    return this.statsService.getStats();
+  }
 }
