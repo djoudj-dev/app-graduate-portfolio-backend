@@ -21,6 +21,7 @@ export class StatsService {
 
   async incrementVisits(): Promise<Stats | null> {
     let stats = await this.getStats();
+    console.log('Current stats before increment:', stats);
 
     if (!stats) {
       stats = await this.initializeStats();
@@ -28,7 +29,7 @@ export class StatsService {
 
     const updatedStats = {
       totalVisits: stats.totalVisits + 1,
-      uniqueVisitors: stats.uniqueVisitors, // 🛠️ Peut être géré différemment si besoin
+      uniqueVisitors: stats.uniqueVisitors,
       pageViews: stats.pageViews + 1,
       lastUpdated: new Date(),
     };
