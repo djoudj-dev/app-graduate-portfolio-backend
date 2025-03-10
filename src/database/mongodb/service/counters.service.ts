@@ -5,11 +5,13 @@ import { Counters } from '../schemas/counters.schema';
 
 @Injectable()
 export class CountersService {
+  private counters: Counters;
+
   constructor(
     @InjectModel(Counters.name) private countersModel: Model<Counters>,
-  ) {}
-
-  private counters: Counters = new Counters();
+  ) {
+    this.counters = new Counters();
+  }
 
   getCounters(): Promise<Counters> {
     return Promise.resolve(this.counters);
@@ -34,7 +36,10 @@ export class CountersService {
   async initializeCounters(): Promise<void> {
     const existingCounters = await this.countersModel.findOne();
     if (!existingCounters) {
+      this.counters = new Counters();
       await this.countersModel.create(this.counters);
+    } else {
+      this.counters = existingCounters;
     }
   }
 }
