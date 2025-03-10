@@ -2,6 +2,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { connectMongoDB } from './database/mongodb/mongo.module';
+import { CountersService } from './database/mongodb/service/counters.service';
 import { StatsService } from './database/mongodb/service/stats.service';
 
 async function bootstrap() {
@@ -29,6 +30,9 @@ async function bootstrap() {
 
   const statsService = app.get(StatsService);
   await statsService.initializeStats();
+
+  const countersService = app.get(CountersService);
+  await countersService.initializeCounters();
 
   const port = process.env.PORT || 3000;
   await app.listen(port);
