@@ -18,32 +18,30 @@ export class CountersService {
   async updateCounters(counters: Partial<Counters>): Promise<Counters> {
     console.log('Valeurs reçues pour mise à jour:', counters);
 
-    // Utilisez le modèle pour créer une instance
-    this.counters = new this.countersModel({
-      ...this.counters.toObject(),
-      ...counters,
-    });
+    // Récupérer ou créer un document existant
+    let existingCounters = await this.countersModel.findOne();
+    if (!existingCounters) {
+      existingCounters = new this.countersModel(); // Crée un nouveau document vide
+    }
 
-    console.log('Nouvelle instance de Counters:', this.counters);
+    // Mise à jour des champs
+    Object.assign(existingCounters, counters);
+    console.log('Nouvelle instance de Counters:', existingCounters);
 
-    // Enregistrer les données dans MongoDB
-    const updatedCounters = await this.countersModel.findByIdAndUpdate(
-      this.counters._id,
-      this.counters,
-      { new: true, upsert: true },
-    );
-
+    // Sauvegarde dans MongoDB
+    const updatedCounters = await existingCounters.save();
     console.log('Counters mis à jour dans MongoDB:', updatedCounters);
-    return Promise.resolve(this.counters);
+
+    return updatedCounters;
   }
 
   async initializeCounters(): Promise<void> {
     const existingCounters = await this.countersModel.findOne();
     if (!existingCounters) {
-      this.counters = new this.countersModel(); // Utiliser le modèle pour créer une instance
-      await this.countersModel.create(this.counters);
+      this.counters = new this.countersModel();
+      await this.counters.save();
     } else {
-      this.counters = existingCounters; // Utiliser les données existantes
+      this.counters = existingCounters;
     }
   }
 }
