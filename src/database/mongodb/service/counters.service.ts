@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Counters } from '../entity/counters.entity';
+import { Counters } from '../schemas/counters.schema';
 
 @Injectable()
 export class CountersService {
@@ -29,5 +29,12 @@ export class CountersService {
     );
 
     return Promise.resolve(this.counters);
+  }
+
+  async initializeCounters(): Promise<void> {
+    const existingCounters = await this.countersModel.findOne();
+    if (!existingCounters) {
+      await this.countersModel.create(this.counters);
+    }
   }
 }
