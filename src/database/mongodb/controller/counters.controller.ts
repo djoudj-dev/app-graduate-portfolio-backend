@@ -1,25 +1,21 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
-import { Counters } from '../schemas/counters.schema';
+import { Body, Controller, NotFoundException, Post } from '@nestjs/common';
+import { IncrementCounterDto } from '../dto/counters.dto';
 import { CountersService } from '../service/counters.service';
 
 @Controller('counters')
 export class CountersController {
   constructor(private readonly countersService: CountersService) {}
 
-  @Get()
-  async getCounters(): Promise<Counters | null> {
-    return this.countersService.getCounters();
-  }
+  @Post('increment')
+  async incrementCounter(@Body() incrementCounterDto: IncrementCounterDto) {
+    const { counterName } = incrementCounterDto;
 
-  @Post()
-  async updateCounters(@Body() data: Counters): Promise<Counters | null> {
-    return this.countersService.updateCounters(data);
-  }
+    const updatedCounters =
+      await this.countersService.incrementCounter(counterName);
+    if (!updatedCounters) {
+      throw new NotFoundException('Counters not found');
+    }
 
-  @Post('increment/:key')
-  async incrementCounter(
-    @Param('key') key: keyof Counters,
-  ): Promise<Counters | null> {
-    return this.countersService.incrementCounter(key);
+    return updatedCounters;
   }
 }

@@ -5,21 +5,6 @@ import { Document } from 'mongoose';
 export class Counters extends Document {
   @Prop({ default: 0 })
   calls: number;
-
-  @Prop({ default: 0 })
-  cv: number;
-
-  @Prop({ default: 0 })
-  github: number;
-
-  @Prop({ default: 0 })
-  linkedin: number;
-
-  @Prop({ default: 0 })
-  projects: number;
-
-  @Prop({ default: 0 })
-  websites: number;
 }
 
 export const CountersSchema = SchemaFactory.createForClass(Counters);
