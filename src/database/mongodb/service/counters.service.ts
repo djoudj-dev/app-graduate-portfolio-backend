@@ -16,18 +16,23 @@ export class CountersService {
   }
 
   async updateCounters(counters: Partial<Counters>): Promise<Counters> {
+    console.log('Valeurs reçues pour mise à jour:', counters);
+
     this.counters = new Counters({
       ...this.counters.toObject(),
       ...counters,
     });
 
+    console.log('Nouvelle instance de Counters:', this.counters);
+
     // Enregistrer les données dans MongoDB
-    await this.countersModel.findByIdAndUpdate(
+    const updatedCounters = await this.countersModel.findByIdAndUpdate(
       this.counters._id,
       this.counters,
       { new: true, upsert: true },
     );
 
+    console.log('Counters mis à jour dans MongoDB:', updatedCounters);
     return Promise.resolve(this.counters);
   }
 
