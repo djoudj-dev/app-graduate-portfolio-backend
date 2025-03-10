@@ -14,12 +14,6 @@ export class Counters extends Document {
 
   @Prop({ default: 0 })
   linkedin: number;
-
-  @Prop({ default: 0 })
-  projects: number;
-
-  @Prop({ default: 0 })
-  websites: number;
 }
 
 export const CountersSchema = SchemaFactory.createForClass(Counters);
