@@ -4,10 +4,8 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
-import { CountersController } from './database/mongodb/controller/counters.controller';
 import { CountersModule } from './database/mongodb/module/counters.module';
 import { StatsModule } from './database/mongodb/module/stats.module';
-import { CountersService } from './database/mongodb/service/counters.service';
 import { PostgresModule } from './database/postgres/postgres.module';
 import { AboutModule } from './modules/about/about.module';
 import { ProjectModule } from './modules/projects/projects.module';
@@ -33,7 +31,7 @@ import { ProjectModule } from './modules/projects/projects.module';
     StatsModule,
     CountersModule,
   ],
-  controllers: [AppController, CountersController],
-  providers: [AppService, CountersService],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}

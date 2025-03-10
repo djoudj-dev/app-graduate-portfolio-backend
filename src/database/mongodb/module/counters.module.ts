@@ -12,5 +12,6 @@ import { CountersService } from '../service/counters.service';
   ],
   controllers: [CountersController],
   providers: [CountersService],
+  exports: [CountersService],
 })
 export class CountersModule {}
