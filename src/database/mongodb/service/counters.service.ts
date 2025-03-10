@@ -18,7 +18,8 @@ export class CountersService {
   async updateCounters(counters: Partial<Counters>): Promise<Counters> {
     console.log('Valeurs reçues pour mise à jour:', counters);
 
-    this.counters = new Counters({
+    // Utilisez le modèle pour créer une instance
+    this.counters = new this.countersModel({
       ...this.counters.toObject(),
       ...counters,
     });
