@@ -16,4 +16,8 @@ export class CountersService {
       .findOneAndUpdate({}, { $inc: { [counterName]: 1 } }, { new: true })
       .exec();
   }
+
+  async getAllCounters(): Promise<Counters[]> {
+    return this.countersModel.find().exec();
+  }
 }

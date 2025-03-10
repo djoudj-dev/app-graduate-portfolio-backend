@@ -1,5 +1,6 @@
-import { Body, Controller, NotFoundException, Post } from '@nestjs/common';
+import { Body, Controller, Get, NotFoundException, Post } from '@nestjs/common';
 import { IncrementCounterDto } from '../dto/counters.dto';
+import { Counters } from '../schemas/counters.schema';
 import { CountersService } from '../service/counters.service';
 
 @Controller('counters')
@@ -17,5 +18,10 @@ export class CountersController {
     }
 
     return updatedCounters;
+  }
+
+  @Get()
+  async getCounters(): Promise<Counters[]> {
+    return this.countersService.getAllCounters();
   }
 }
