@@ -10,7 +10,7 @@ export class CountersService {
   constructor(
     @InjectModel(Counters.name) private countersModel: Model<Counters>,
   ) {
-    this.counters = new Counters();
+    // this.counters = new Counters(); // Supprimé
   }
 
   getCounters(): Promise<Counters> {
@@ -36,10 +36,10 @@ export class CountersService {
   async initializeCounters(): Promise<void> {
     const existingCounters = await this.countersModel.findOne();
     if (!existingCounters) {
-      this.counters = new Counters();
+      this.counters = new Counters(); // Initialisation ici
       await this.countersModel.create(this.counters);
     } else {
-      this.counters = existingCounters;
+      this.counters = existingCounters; // Utiliser les données existantes
     }
   }
 }
