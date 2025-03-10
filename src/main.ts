@@ -12,20 +12,11 @@ async function bootstrap() {
 
   // Configuration dynamique des CORS
   app.enableCors({
-    origin: (
-      origin: string | undefined,
-      callback: (err: Error | null, origin?: string) => void,
-    ) => {
-      const allowedOrigins = [
-        'https://app-graduate-front.nedellec-julien.fr', // Frontend en prod
-        'http://localhost:4200', // Dev Frontend
-      ];
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, origin); // Autoriser l'origine demandée
-      } else {
-        callback(new Error('CORS non autorisé'));
-      }
-    },
+    origin: [
+      'https://app-graduate-front.nedellec-julien.fr', // Frontend en prod
+      'http://localhost:4200', // Dev Frontend
+      'https://api-app-graduate-back.nedellec-julien.fr', // Ajout de l'origine manquante
+    ],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization'],
