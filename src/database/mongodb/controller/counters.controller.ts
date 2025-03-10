@@ -12,7 +12,7 @@ export class CountersController {
   }
 
   @Post()
-  updateCounters(@Body() counters: Counters): Promise<Counters> {
+  updateCounters(@Body() counters: Partial<Counters>): Promise<Counters> {
     return this.countersService.updateCounters(counters);
   }
 }
