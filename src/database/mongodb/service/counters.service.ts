@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Counters } from '../schemas/counters.schema';
+import { Counters } from '../entity/counters.entity';
 
 @Injectable()
 export class CountersService {
@@ -9,15 +9,25 @@ export class CountersService {
     @InjectModel(Counters.name) private countersModel: Model<Counters>,
   ) {}
 
-  async incrementCounter(
-    counterName: keyof Counters,
-  ): Promise<Counters | null> {
-    return this.countersModel
-      .findOneAndUpdate({}, { $inc: { [counterName]: 1 } }, { new: true })
-      .exec();
+  private counters: Counters = new Counters();
+
+  getCounters(): Promise<Counters> {
+    return Promise.resolve(this.counters);
   }
 
-  async getAllCounters(): Promise<Counters[]> {
-    return this.countersModel.find().exec();
+  async updateCounters(counters: Partial<Counters>): Promise<Counters> {
+    this.counters = new Counters({
+      ...this.counters.toObject(),
+      ...counters,
+    });
+
+    // Enregistrer les données dans MongoDB
+    await this.countersModel.findByIdAndUpdate(
+      this.counters._id,
+      this.counters,
+      { new: true, upsert: true },
+    );
+
+    return Promise.resolve(this.counters);
   }
 }
